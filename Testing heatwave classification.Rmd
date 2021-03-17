@@ -62,27 +62,3 @@ heatwave_days <- df %>%
 ```
 
 
-# Calculating cold days
-find where 'cold snap' criteria is met
-```{r}
-df <- df %>% 
-  # idenify whether the daily temperature falls below coldsnap threshold
-  mutate(below_threshold = if_else(temp < cs_threshold, 1, 0)) %>% 
-  # group by grid square and create a sum of the binary variable for the current day plus previous day
-  group_by(grid) %>% 
-  mutate(roll = rollapplyr(below_threshold, 2, sum, partial = T)) %>% 
-  ungroup() %>% 
-  # where the sum is 2 (2 days fall below coldsnap threshold) assign 1, otherwise 0
-  mutate(coldsnap = if_else(roll == 2,1,0)) %>% 
-  # remove intermediary columns
-  select(-c(roll,below_threshold))
-```
-
-count number of 'cold snap' days for each grid square (and time period?)
-```{r}
-coldsnap_days <- df %>% 
-  # group by grid square (and poss time period)
-  group_by(grid) %>% 
-  # sum coldsnap days
-  summarise(total = sum(coldsnap))
-```
