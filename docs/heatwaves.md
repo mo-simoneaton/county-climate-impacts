@@ -26,6 +26,6 @@ The following steps were carried out to calculate the likely number of heatwaves
 
 2. Execute [this Python script](https://github.com/mo-simoneaton/county-climate-impacts/blob/master/ns_csv_conversion2_tasmin.py) to replace temperature values <=24 with NaN to reduce filesize whilst maintaining time series integrity and convert to CSV.
 
-3. Execute [this R script](https://github.com/mo-simoneaton/county-climate-impacts/blob/master/Testing%20heatwave%20classification.Rmd) to identify heatwave events in the CSV files where a heatwave event = 3 consecutive days where the max temp >= the regional threshold for that grid cell.
+3. Execute [this R code](https://github.com/mo-simoneaton/county-climate-impacts/tree/master/Heatwave%20classifier) to identify heatwave events in the CSV files where a heatwave event = 3 consecutive days where the max temp >= the regional threshold for that grid cell.
 
 4. TODO
