@@ -12,11 +12,13 @@ import numpy as np
 def main(old_name, new_name, tasmax_threshold=24):
     import netCDF4
     import pandas as pd
+    import xarray as xr
     data = netCDF4.Dataset(old_name)
     tasmax = data['tasmax'][0] #Ensemble member 1
-
+    xarray_data=xr.open_dataset(old_name)
+    xarray_time=(xarray_data.coords["yyyymmdd"].values).astype(int)
     nt, ny, nx = tasmax.shape #Time, y-grid, x-grid
-    time = data['time'][:].astype(int)
+    time = xarray_time
     x = data['projection_x_coordinate'][:]
     y = data['projection_y_coordinate'][:]
     xx, yy = np.repeat(x, ny)[:, None], np.tile(y, nx)[:, None]
