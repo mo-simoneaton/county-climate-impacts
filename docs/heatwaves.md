@@ -14,6 +14,14 @@ From the Met Office website:
 
 For further info on heatwaves see [here](https://www.metoffice.gov.uk/weather/learn-about/weather/types-of-weather/temperature/heatwave).
 
+### Outputs
+
+An [interactive map](https://gdsl.carto.com/u/natalie-envs456-19/builder/bbaadca7-7e88-408c-a56b-10e71ce01494/embed?state=%7B%22map%22%3A%7B%22ne%22%3A%5B46.98025235521883%2C-16.545410156250004%5D%2C%22sw%22%3A%5B62.20651189841766%2C9.953613281250002%5D%2C%22center%22%3A%5B55.31664304437719%2C-3.2958984375000004%5D%2C%22zoom%22%3A6%7D%7D) based on the heatwave event data. Credit: Natalie Rose
+
+### IMPORTANT
+
+There's currently some noise in the heatwave events data. Some double-counting of days contributing to heatwave events means the numbers are skewed upwards. Adjustment is needed in [this R code](https://github.com/mo-simoneaton/county-climate-impacts/tree/master/Heatwave%20classifier) to return accurate results. The visual still indicates a trend, but the numerical values are out.
+
 ### Source data
 
 The [UKCP18 UK Climate Projections](https://github.com/COP26-Hackathon/Met-Office-Climate-Data-Challenge-March_2021/wiki/Data-Sources#uk-climate-projections).
@@ -29,3 +37,4 @@ The following steps were carried out to calculate the likely number of heatwaves
 3. Execute [this R code](https://github.com/mo-simoneaton/county-climate-impacts/tree/master/Heatwave%20classifier) to identify heatwave events in the CSV files where a heatwave event = 3 consecutive days where the max temp >= the regional threshold for that grid cell.
 
 4. TODO
+
