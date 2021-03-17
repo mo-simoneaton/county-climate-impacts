@@ -12,11 +12,13 @@ import numpy as np
 def main(old_name, new_name, tasmax_threshold=24):
     import netCDF4
     import pandas as pd
+    import xarray as xr
     data = netCDF4.Dataset(old_name)
     tasmax = data['tasmax'][0] #Ensemble member 1
+    xarray_data=xr.open_dataset(old_name)
+    time=(xarray_data.coords["yyyymmdd"].values).astype(int)
 
     nt, ny, nx = tasmax.shape #Time, y-grid, x-grid
-    time = data['time'][:].astype(int)
     x = data['projection_x_coordinate'][:]
     y = data['projection_y_coordinate'][:]
     xx, yy = np.repeat(x, ny)[:, None], np.tile(y, nx)[:, None]
@@ -36,7 +38,7 @@ def main(old_name, new_name, tasmax_threshold=24):
     df.to_csv(new_name, index=False,
           compression='gzip')
 
-def loop_convert(directory, target_dir='/home/jonathan/Documents/Data/Met_Office_Data_Challenge/Daily_Selected_CSV'):
+def loop_convert(directory, target_dir='CSV_OUTPUT'):
     import os
     if not os.path.exists(target_dir):
         os.mkdir(target_dir)
@@ -48,5 +50,5 @@ def loop_convert(directory, target_dir='/home/jonathan/Documents/Data/Met_Office
 
 
 if __name__ == '__main__':
-    dir_to_ntcdf_files = '/home/jonathan/Documents/Data/Met_Office_Data_Challenge/Daily_Selected'
+    dir_to_ntcdf_files = 'Data/NC'
     loop_convert(dir_to_ntcdf_files)
