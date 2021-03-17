@@ -4,4 +4,4 @@ This project was carried out over 2 days as part of the [Met Office Climate Data
 
 ### Strands
 
-There are two main strands to this project: [heatwave impacts](heatwaves.md) and plant growth impacts.
+There are two main strands to this project: [heatwave impacts](heatwaves.md) and [plant growth impacts](plantgrowth.md).
