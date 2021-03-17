@@ -1754,10 +1754,11 @@ summary {
 <p>load dependencies</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkYXRhLnRhYmxlKVxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHpvbylcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkYXRhLnRhYmxlKVxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KHpvbylcbmxpYnJhcnkocmVzaGFwZSlcbmBgYCJ9 -->
 <pre class="r"><code>library(data.table)
 library(tidyverse)
-library(zoo)</code></pre>
+library(zoo)
+library(reshape)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1781,43 +1782,25 @@ lookup &lt;- fread(&#39;lookup_table.csv&#39;)</code></pre>
 <p>restructure data</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb252ZXJ0IGNvbHMgdG8gcm93cyBmb3IgZWFjaCBkYXlcbmRmMSA8LSBtZWx0KGRmMSwgaWQgPSBjKCdwcm9qZWN0aW9uX3hfY29vcmRpbmF0ZScsICdwcm9qZWN0aW9uX3lfY29vcmRpbmF0ZScpKSAlPiUgXG4gIG11dGF0ZShwZXJpb2QgPSAnOTUtMDAnKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjb252ZXJ0IGNvbHMgdG8gcm93cyBmb3IgZWFjaCBkYXlcbmRmMSA8LSBtZWx0KGRmMSwgaWQgPSBjKCdwcm9qZWN0aW9uX3hfY29vcmRpbmF0ZScsICdwcm9qZWN0aW9uX3lfY29vcmRpbmF0ZScpKSAlPiUgXG4gIG11dGF0ZShwZXJpb2QgPSAnOTUtMDAnKVxuZGYyIDwtIG1lbHQoZGYyLCBpZCA9IGMoJ3Byb2plY3Rpb25feF9jb29yZGluYXRlJywgJ3Byb2plY3Rpb25feV9jb29yZGluYXRlJykpICU+JSBcbiAgbXV0YXRlKHBlcmlvZCA9ICcyNS0zMCcpXG5kZjMgPC0gbWVsdChkZjMsIGlkID0gYygncHJvamVjdGlvbl94X2Nvb3JkaW5hdGUnLCAncHJvamVjdGlvbl95X2Nvb3JkaW5hdGUnKSkgJT4lIFxuICBtdXRhdGUocGVyaW9kID0gJzU1LTYwJylcblxuZGZfYWxsIDwtIHJiaW5kKGRmMSxkZjIsZGYzKSAlPiUgXG4gIG11dGF0ZV9hdCh2YXJzKHBlcmlvZCksIGZhY3RvcilcblxuIyBtYWtlIE5BcyAwXG5kZl9hbGxbaXMubmEoZGZfYWxsKV0gPC0gMFxuXG4jIG1lcmdlIHRocmVzaG9sZCBsb29rdXBcbmRmX2FsbCA8LSBsZWZ0X2pvaW4oZGZfYWxsLGxvb2t1cDIpXG5cbmRmX2FsbCA8LSBkZl9hbGwgJT4lIFxuICAjIGFkZCBhIGdyaWQgaWQgZm9yIGVhY2ggcGFpciBvZiBjb29yZGluYXRlc1xuICBncm91cF9ieShwcm9qZWN0aW9uX3hfY29vcmRpbmF0ZSxwcm9qZWN0aW9uX3lfY29vcmRpbmF0ZSkgJT4lIFxuICBtdXRhdGUoZ3JpZF9pZCA9IGN1cl9ncm91cF9pZCgpKSAlPiUgXG4gIHVuZ3JvdXAoKSAlPiUgXG4gICMgcmVuYW1lIHZhcmlhYmxlc1xuICByZW5hbWUoZGF5X2lkID0gdmFyaWFibGUsIHRlbXAgPSB2YWx1ZSkgJT4lIFxuICAjIGVuc3VyZSBkYXRhIGlzIGluIGNocm9ub2xvZ2ljYWwgb3JkZXIgYnkgZ3JpZFxuICBhcnJhbmdlKGdyaWRfaWQsZGF5X2lkKVxuYGBgIn0= -->
 <pre class="r"><code># convert cols to rows for each day
 df1 &lt;- melt(df1, id = c(&#39;projection_x_coordinate&#39;, &#39;projection_y_coordinate&#39;)) %&gt;% 
-  mutate(period = &#39;95-00&#39;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiJ21lYXN1cmUudmFycycgWzIyMzkzMiwgMjIzOTU2LCAyMjM5ODAsIDIyNDAwNCwgLi4uXSBhcmUgbm90IGFsbCBvZiB0aGUgc2FtZSB0eXBlLiBCeSBvcmRlciBvZiBoaWVyYXJjaHksIHRoZSBtb2x0ZW4gZGF0YSB2YWx1ZSBjb2x1bW4gd2lsbCBiZSBvZiB0eXBlICdkb3VibGUnLiBBbGwgbWVhc3VyZSB2YXJpYWJsZXMgbm90IG9mIHR5cGUgJ2RvdWJsZScgd2lsbCBiZSBjb2VyY2VkIHRvby4gQ2hlY2sgREVUQUlMUyBpbiA/bWVsdC5kYXRhLnRhYmxlIGZvciBtb3JlIG9uIGNvZXJjaW9uLlxuIn0= -->
-<pre><code>&#39;measure.vars&#39; [223932, 223956, 223980, 224004, ...] are not all of the same type. By order of hierarchy, the molten data value column will be of type &#39;double&#39;. All measure variables not of type &#39;double&#39; will be coerced too. Check DETAILS in ?melt.data.table for more on coercion.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGYyIDwtIG1lbHQoZGYyLCBpZCA9IGMoJ3Byb2plY3Rpb25feF9jb29yZGluYXRlJywgJ3Byb2plY3Rpb25feV9jb29yZGluYXRlJykpICU+JSBcbiAgbXV0YXRlKHBlcmlvZCA9ICcyNS0zMCcpXG5gYGAifQ== -->
-<pre class="r"><code>df2 &lt;- melt(df2, id = c(&#39;projection_x_coordinate&#39;, &#39;projection_y_coordinate&#39;)) %&gt;% 
-  mutate(period = &#39;25-30&#39;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiJ21lYXN1cmUudmFycycgWzQ4MzEzMiwgNDgzMTU2LCA0ODMxODAsIDQ4MzIwNCwgLi4uXSBhcmUgbm90IGFsbCBvZiB0aGUgc2FtZSB0eXBlLiBCeSBvcmRlciBvZiBoaWVyYXJjaHksIHRoZSBtb2x0ZW4gZGF0YSB2YWx1ZSBjb2x1bW4gd2lsbCBiZSBvZiB0eXBlICdkb3VibGUnLiBBbGwgbWVhc3VyZSB2YXJpYWJsZXMgbm90IG9mIHR5cGUgJ2RvdWJsZScgd2lsbCBiZSBjb2VyY2VkIHRvby4gQ2hlY2sgREVUQUlMUyBpbiA/bWVsdC5kYXRhLnRhYmxlIGZvciBtb3JlIG9uIGNvZXJjaW9uLlxuIn0= -->
-<pre><code>&#39;measure.vars&#39; [483132, 483156, 483180, 483204, ...] are not all of the same type. By order of hierarchy, the molten data value column will be of type &#39;double&#39;. All measure variables not of type &#39;double&#39; will be coerced too. Check DETAILS in ?melt.data.table for more on coercion.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGYzIDwtIG1lbHQoZGYzLCBpZCA9IGMoJ3Byb2plY3Rpb25feF9jb29yZGluYXRlJywgJ3Byb2plY3Rpb25feV9jb29yZGluYXRlJykpICU+JSBcbiAgbXV0YXRlKHBlcmlvZCA9ICc1NS02MCcpXG5gYGAifQ== -->
-<pre class="r"><code>df3 &lt;- melt(df3, id = c(&#39;projection_x_coordinate&#39;, &#39;projection_y_coordinate&#39;)) %&gt;% 
-  mutate(period = &#39;55-60&#39;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiJ21lYXN1cmUudmFycycgWzc0MjMzMiwgNzQyMzU2LCA3NDIzODAsIDc0MjQwNCwgLi4uXSBhcmUgbm90IGFsbCBvZiB0aGUgc2FtZSB0eXBlLiBCeSBvcmRlciBvZiBoaWVyYXJjaHksIHRoZSBtb2x0ZW4gZGF0YSB2YWx1ZSBjb2x1bW4gd2lsbCBiZSBvZiB0eXBlICdkb3VibGUnLiBBbGwgbWVhc3VyZSB2YXJpYWJsZXMgbm90IG9mIHR5cGUgJ2RvdWJsZScgd2lsbCBiZSBjb2VyY2VkIHRvby4gQ2hlY2sgREVUQUlMUyBpbiA/bWVsdC5kYXRhLnRhYmxlIGZvciBtb3JlIG9uIGNvZXJjaW9uLlxuIn0= -->
-<pre><code>&#39;measure.vars&#39; [742332, 742356, 742380, 742404, ...] are not all of the same type. By order of hierarchy, the molten data value column will be of type &#39;double&#39;. All measure variables not of type &#39;double&#39; will be coerced too. Check DETAILS in ?melt.data.table for more on coercion.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfYWxsIDwtIHJiaW5kKGRmMSxkZjIsZGYzKSAlPiUgXG4gIG11dGF0ZV9hdCh2YXJzKHBlcmlvZCksIGZhY3RvcilcblxuIyBtYWtlIE5BcyAwXG5kZl9hbGxbaXMubmEoZGZfYWxsKV0gPC0gMFxuXG4jIG1lcmdlIHRocmVzaG9sZCBsb29rdXBcbmRmX2FsbCA8LSBsZWZ0X2pvaW4oZGZfYWxsLGxvb2t1cDIpXG5gYGAifQ== -->
-<pre class="r"><code>df_all &lt;- rbind(df1,df2,df3) %&gt;% 
+  mutate(period = &#39;95-00&#39;)
+df2 &lt;- melt(df2, id = c(&#39;projection_x_coordinate&#39;, &#39;projection_y_coordinate&#39;)) %&gt;% 
+  mutate(period = &#39;25-30&#39;)
+df3 &lt;- melt(df3, id = c(&#39;projection_x_coordinate&#39;, &#39;projection_y_coordinate&#39;)) %&gt;% 
+  mutate(period = &#39;55-60&#39;)
+
+df_all &lt;- rbind(df1,df2,df3) %&gt;% 
   mutate_at(vars(period), factor)
 
 # make NAs 0
 df_all[is.na(df_all)] &lt;- 0
 
 # merge threshold lookup
-df_all &lt;- left_join(df_all,lookup2)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiSm9pbmluZywgYnkgPSBjKFwicHJvamVjdGlvbl94X2Nvb3JkaW5hdGVcIiwgXCJwcm9qZWN0aW9uX3lfY29vcmRpbmF0ZVwiKVxuIn0= -->
-<pre><code>Joining, by = c(&quot;projection_x_coordinate&quot;, &quot;projection_y_coordinate&quot;)</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGZfYWxsIDwtIGRmX2FsbCAlPiUgXG4gICMgYWRkIGEgZ3JpZCBpZCBmb3IgZWFjaCBwYWlyIG9mIGNvb3JkaW5hdGVzXG4gIGdyb3VwX2J5KHByb2plY3Rpb25feF9jb29yZGluYXRlLHByb2plY3Rpb25feV9jb29yZGluYXRlKSAlPiUgXG4gIG11dGF0ZShncmlkX2lkID0gY3VyX2dyb3VwX2lkKCkpICU+JSBcbiAgdW5ncm91cCgpICU+JSBcbiAgIyByZW5hbWUgdmFyaWFibGVzXG4gIHJlbmFtZShkYXlfaWQgPSB2YXJpYWJsZSwgdGVtcCA9IHZhbHVlKSAlPiUgXG4gICMgZW5zdXJlIGRhdGEgaXMgaW4gY2hyb25vbG9naWNhbCBvcmRlciBieSBncmlkXG4gIGFycmFuZ2UoZ3JpZF9pZCxkYXlfaWQpXG5gYGAifQ== -->
-<pre class="r"><code>df_all &lt;- df_all %&gt;% 
+df_all &lt;- left_join(df_all,lookup2)
+
+df_all &lt;- df_all %&gt;% 
   # add a grid id for each pair of coordinates
   group_by(projection_x_coordinate,projection_y_coordinate) %&gt;% 
   mutate(grid_id = cur_group_id()) %&gt;% 
@@ -1848,17 +1831,29 @@ df_all &lt;- left_join(df_all,lookup2)</code></pre>
 <p>count number of heatwave days for each grid square (and time period?)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhdHdhdmVfZGF5czIgPC0gbGVmdF9qb2luKGhlYXR3YXZlX2RheXMsIGdyaWRfbHUpW2MoNCw1LDIsMyldXG5cbmBgYCJ9 -->
-<pre class="r"><code>heatwave_days2 &lt;- left_join(heatwave_days, grid_lu)[c(4,5,2,3)]
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhdHdhdmVfZGF5cyA8LSBkZl9hbGwgJT4lIFxuICAjIGdyb3VwIGJ5IGdyaWQgc3F1YXJlIChhbmQgcG9zcyB0aW1lIHBlcmlvZClcbiAgZ3JvdXBfYnkoZ3JpZF9pZCxwZXJpb2QpICU+JSBcbiAgIyBzdW0gaGVhdHdhdmUgZGF5c1xuICBzdW1tYXJpc2UodG90YWxfaGVhdHdhdmVfZGF5cyA9IHN1bShoZWF0d2F2ZSkpXG5cbiMgZmluZCBhbGwgdW5pcXVlIGNvbWJpbmF0aW9ucyBvZiBjb29yZGluYXRlcyBhbmQgdGhlaXIgY29ycmVzcG9uZGluZyBncmlkIElEXG5ncmlkX2x1IDwtIHVuaXF1ZShkZl9hbGxbYygxLDIsNildKVxuXG4jIGFkZCBjb29yZGluYXRlcyB0byB0aGUgaGVhdHdhdmVfZGF5cyB0YWJsZVxuaGVhdHdhdmVfZGF5czIgPC0gbGVmdF9qb2luKGhlYXR3YXZlX2RheXMsIGdyaWRfbHUpW2MoNCw1LDIsMyldXG5cbiMgbWFrZSBlYWNoIHRpbWUgcGVyaW9kIGEgZGlmZmVyZW50IGNvbHVtblxuaHdfd2lkZSA8LSBjYXN0KGhlYXR3YXZlX2RheXMyLCBwcm9qZWN0aW9uX3hfY29vcmRpbmF0ZSArIHByb2plY3Rpb25feV9jb29yZGluYXRlIH4gcGVyaW9kKVxuXG4jICEhISEhISEhIGFtZW5kIG5hbWUgZm9yIGVhY2ggZW5zZW1ibGUgcGxvdCAhISEhISEhISEhXG5md3JpdGUoaHdfd2lkZSwgJ2hlYXR3YXZlX2RheXNfZW5zZW1ibGUxLmNzdicpXG5gYGAifQ== -->
+<pre class="r"><code>heatwave_days &lt;- df_all %&gt;% 
+  # group by grid square (and poss time period)
+  group_by(grid_id,period) %&gt;% 
+  # sum heatwave days
+  summarise(total_heatwave_days = sum(heatwave))
+
+# find all unique combinations of coordinates and their corresponding grid ID
+grid_lu &lt;- unique(df_all[c(1,2,6)])
+
+# add coordinates to the heatwave_days table
+heatwave_days2 &lt;- left_join(heatwave_days, grid_lu)[c(4,5,2,3)]
+
+# make each time period a different column
+hw_wide &lt;- cast(heatwave_days2, projection_x_coordinate + projection_y_coordinate ~ period)
+
+# !!!!!!!! amend name for each ensemble plot !!!!!!!!!!
+fwrite(hw_wide, &#39;heatwave_days_ensemble1.csv&#39;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiSm9pbmluZywgYnkgPSBcImdyaWRfaWRcIlxuIn0= -->
-<pre><code>Joining, by = &quot;grid_id&quot;</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiQmF0Y2ggcnVucyBmb3Igb25lIGVuc2VtYmxlIGdyb3VwIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIENhbGN1bGF0aW5nIGhlYXR3YXZlIGRheXMKbG9hZCBkZXBlbmRlbmNpZXMKYGBge3J9CmxpYnJhcnkoZGF0YS50YWJsZSkKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoem9vKQpgYGAKCnJlYWQgaW4gZGF0YSAoYW5kIGZvcm1hdCBhY2NvcmRpbmdseSkKYGBge3J9CiMgYW1tZW5kIHRoZXNlIGZvciBlYWNoIGVuc2VtYmxlIAojIDk1LTAwIGRhdGEKZGYxIDwtIGZyZWFkKCdtYXhfYWlyX3RlbXBfY3N2X2ZpbGVzL3Rhc21heF9yY3A4NV9sYW5kLXJjbV91a18xMmttXzAxX2RheV8xOTk1MTIwMS0yMDAwMTEzMC5jc3YuZ3onKQojIDI1LTMwIGRhdGEKZGYyIDwtIGZyZWFkKCdtYXhfYWlyX3RlbXBfY3N2X2ZpbGVzL3Rhc21heF9yY3A4NV9sYW5kLXJjbV91a18xMmttXzAxX2RheV8yMDI1MTIwMS0yMDMwMTEzMC5jc3YuZ3onKQojIDU1LTYwIGRhdGEKZGYzIDwtIGZyZWFkKCdtYXhfYWlyX3RlbXBfY3N2X2ZpbGVzL3Rhc21heF9yY3A4NV9sYW5kLXJjbV91a18xMmttXzAxX2RheV8yMDU1MTIwMS0yMDYwMTEzMC5jc3YuZ3onKQoKCmxvb2t1cCA8LSBmcmVhZCgnbG9va3VwX3RhYmxlLmNzdicpCmBgYAoKcmVzdHJ1Y3R1cmUgZGF0YQpgYGB7cn0KIyBjb252ZXJ0IGNvbHMgdG8gcm93cyBmb3IgZWFjaCBkYXkKZGYxIDwtIG1lbHQoZGYxLCBpZCA9IGMoJ3Byb2plY3Rpb25feF9jb29yZGluYXRlJywgJ3Byb2plY3Rpb25feV9jb29yZGluYXRlJykpICU+JSAKICBtdXRhdGUocGVyaW9kID0gJzk1LTAwJykKZGYyIDwtIG1lbHQoZGYyLCBpZCA9IGMoJ3Byb2plY3Rpb25feF9jb29yZGluYXRlJywgJ3Byb2plY3Rpb25feV9jb29yZGluYXRlJykpICU+JSAKICBtdXRhdGUocGVyaW9kID0gJzI1LTMwJykKZGYzIDwtIG1lbHQoZGYzLCBpZCA9IGMoJ3Byb2plY3Rpb25feF9jb29yZGluYXRlJywgJ3Byb2plY3Rpb25feV9jb29yZGluYXRlJykpICU+JSAKICBtdXRhdGUocGVyaW9kID0gJzU1LTYwJykKCmRmX2FsbCA8LSByYmluZChkZjEsZGYyLGRmMykgJT4lIAogIG11dGF0ZV9hdCh2YXJzKHBlcmlvZCksIGZhY3RvcikKCiMgbWFrZSBOQXMgMApkZl9hbGxbaXMubmEoZGZfYWxsKV0gPC0gMAoKIyBtZXJnZSB0aHJlc2hvbGQgbG9va3VwCmRmX2FsbCA8LSBsZWZ0X2pvaW4oZGZfYWxsLGxvb2t1cDIpCgpkZl9hbGwgPC0gZGZfYWxsICU+JSAKICAjIGFkZCBhIGdyaWQgaWQgZm9yIGVhY2ggcGFpciBvZiBjb29yZGluYXRlcwogIGdyb3VwX2J5KHByb2plY3Rpb25feF9jb29yZGluYXRlLHByb2plY3Rpb25feV9jb29yZGluYXRlKSAlPiUgCiAgbXV0YXRlKGdyaWRfaWQgPSBjdXJfZ3JvdXBfaWQoKSkgJT4lIAogIHVuZ3JvdXAoKSAlPiUgCiAgIyByZW5hbWUgdmFyaWFibGVzCiAgcmVuYW1lKGRheV9pZCA9IHZhcmlhYmxlLCB0ZW1wID0gdmFsdWUpICU+JSAKICAjIGVuc3VyZSBkYXRhIGlzIGluIGNocm9ub2xvZ2ljYWwgb3JkZXIgYnkgZ3JpZAogIGFycmFuZ2UoZ3JpZF9pZCxkYXlfaWQpCmBgYAoKCmZpbmQgd2hlcmUgaGVhdHdhdmUgY3JpdGVyaWEgaXMgbWV0CmBgYHtyfQpkZl9hbGwgPC0gZGZfYWxsICU+JSAKICAjIGlkZW5pZnkgd2hldGhlciB0aGUgZGFpbHkgdGVtcGVyYXR1cmUgbWVldHMgb3IgZXhjZWVkcyBoZWF0d2F2ZSB0aHJlc2hvbGQKICBtdXRhdGUoYWJvdmVfdGhyZXNob2xkID0gaWZfZWxzZSh0ZW1wID49IGh3X3RocmVzaG9sZCwgMSwgMCkpICU+JSAKICAjIGdyb3VwIGJ5IGdyaWQgc3F1YXJlIGFuZCBjcmVhdGUgYSBzdW0gb2YgdGhlIGJpbmFyeSB2YXJpYWJsZSBmb3IgdGhlIGN1cnJlbnQgZGF5IHBsdXMgcHJldmlvdXMgMiBkYXlzCiAgZ3JvdXBfYnkoZ3JpZF9pZCxwZXJpb2QpICU+JSAKICBtdXRhdGUocm9sbCA9IHJvbGxhcHBseXIoYWJvdmVfdGhyZXNob2xkLCAzLCBzdW0sIHBhcnRpYWwgPSBUKSkgJT4lIAogIHVuZ3JvdXAoKSAlPiUgCiAgIyB3aGVyZSB0aGUgc3VtIGlzIDMgKGFsbCB0aHJlZSBkYXlzIG1lZXQgb3IgZXhjZWVkIGhlYXR3YXZlIHRocmVzaG9sZCkgYXNzaWduIDEsIG90aGVyd2lzZSAwCiAgbXV0YXRlKGhlYXR3YXZlID0gaWZfZWxzZShyb2xsID09IDMsMSwwKSkKYGBgCgpjb3VudCBudW1iZXIgb2YgaGVhdHdhdmUgZGF5cyBmb3IgZWFjaCBncmlkIHNxdWFyZSAoYW5kIHRpbWUgcGVyaW9kPykKYGBge3J9CmhlYXR3YXZlX2RheXMgPC0gZGZfYWxsICU+JSAKICAjIGdyb3VwIGJ5IGdyaWQgc3F1YXJlIChhbmQgcG9zcyB0aW1lIHBlcmlvZCkKICBncm91cF9ieShncmlkX2lkLHBlcmlvZCkgJT4lIAogICMgc3VtIGhlYXR3YXZlIGRheXMKICBzdW1tYXJpc2UodG90YWxfaGVhdHdhdmVfZGF5cyA9IHN1bShoZWF0d2F2ZSkpCgojIGZpbmQgYWxsIHVuaXF1ZSBjb21iaW5hdGlvbnMgb2YgY29vcmRpbmF0ZXMgYW5kIHRoZWlyIGNvcnJlc3BvbmRpbmcgZ3JpZCBJRApncmlkX2x1IDwtIHVuaXF1ZShkZl9hbGxbYygxLDIsNSldKQoKIyBhZGQgY29vcmRpbmF0ZXMgdG8gdGhlIGhlYXR3YXZlX2RheXMgdGFibGUKaGVhdHdhdmVfZGF5czIgPC0gbGVmdF9qb2luKGhlYXR3YXZlX2RheXMsIGdyaWRfbHUpW2MoNCw1LDIsMyldCgojICEhISEhISEhIGFtZW5kIG5hbWUgZm9yIGVhY2ggZW5zZW1ibGUgcGxvdCAhISEhISEhISEhCmZ3cml0ZShoZWF0d2F2ZV9kYXlzMiwgJ2hlYXR3YXZlX2RheXNfZW5zZW1ibGUxLmNzdicpCmBgYA==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiQmF0Y2ggcnVucyBmb3Igb25lIGVuc2VtYmxlIGdyb3VwIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIENhbGN1bGF0aW5nIGhlYXR3YXZlIGRheXMKbG9hZCBkZXBlbmRlbmNpZXMKYGBge3J9CmxpYnJhcnkoZGF0YS50YWJsZSkKbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoem9vKQpsaWJyYXJ5KHJlc2hhcGUpCmBgYAoKcmVhZCBpbiBkYXRhIChhbmQgZm9ybWF0IGFjY29yZGluZ2x5KQpgYGB7cn0KIyBhbW1lbmQgdGhlc2UgZm9yIGVhY2ggZW5zZW1ibGUgCiMgOTUtMDAgZGF0YQpkZjEgPC0gZnJlYWQoJ21heF9haXJfdGVtcF9jc3ZfZmlsZXMvdGFzbWF4X3JjcDg1X2xhbmQtcmNtX3VrXzEya21fMDFfZGF5XzE5OTUxMjAxLTIwMDAxMTMwLmNzdi5neicpCiMgMjUtMzAgZGF0YQpkZjIgPC0gZnJlYWQoJ21heF9haXJfdGVtcF9jc3ZfZmlsZXMvdGFzbWF4X3JjcDg1X2xhbmQtcmNtX3VrXzEya21fMDFfZGF5XzIwMjUxMjAxLTIwMzAxMTMwLmNzdi5neicpCiMgNTUtNjAgZGF0YQpkZjMgPC0gZnJlYWQoJ21heF9haXJfdGVtcF9jc3ZfZmlsZXMvdGFzbWF4X3JjcDg1X2xhbmQtcmNtX3VrXzEya21fMDFfZGF5XzIwNTUxMjAxLTIwNjAxMTMwLmNzdi5neicpCgoKbG9va3VwIDwtIGZyZWFkKCdsb29rdXBfdGFibGUuY3N2JykKYGBgCgpyZXN0cnVjdHVyZSBkYXRhCmBgYHtyfQojIGNvbnZlcnQgY29scyB0byByb3dzIGZvciBlYWNoIGRheQpkZjEgPC0gbWVsdChkZjEsIGlkID0gYygncHJvamVjdGlvbl94X2Nvb3JkaW5hdGUnLCAncHJvamVjdGlvbl95X2Nvb3JkaW5hdGUnKSkgJT4lIAogIG11dGF0ZShwZXJpb2QgPSAnOTUtMDAnKQpkZjIgPC0gbWVsdChkZjIsIGlkID0gYygncHJvamVjdGlvbl94X2Nvb3JkaW5hdGUnLCAncHJvamVjdGlvbl95X2Nvb3JkaW5hdGUnKSkgJT4lIAogIG11dGF0ZShwZXJpb2QgPSAnMjUtMzAnKQpkZjMgPC0gbWVsdChkZjMsIGlkID0gYygncHJvamVjdGlvbl94X2Nvb3JkaW5hdGUnLCAncHJvamVjdGlvbl95X2Nvb3JkaW5hdGUnKSkgJT4lIAogIG11dGF0ZShwZXJpb2QgPSAnNTUtNjAnKQoKZGZfYWxsIDwtIHJiaW5kKGRmMSxkZjIsZGYzKSAlPiUgCiAgbXV0YXRlX2F0KHZhcnMocGVyaW9kKSwgZmFjdG9yKQoKIyBtYWtlIE5BcyAwCmRmX2FsbFtpcy5uYShkZl9hbGwpXSA8LSAwCgojIG1lcmdlIHRocmVzaG9sZCBsb29rdXAKZGZfYWxsIDwtIGxlZnRfam9pbihkZl9hbGwsbG9va3VwMikKCmRmX2FsbCA8LSBkZl9hbGwgJT4lIAogICMgYWRkIGEgZ3JpZCBpZCBmb3IgZWFjaCBwYWlyIG9mIGNvb3JkaW5hdGVzCiAgZ3JvdXBfYnkocHJvamVjdGlvbl94X2Nvb3JkaW5hdGUscHJvamVjdGlvbl95X2Nvb3JkaW5hdGUpICU+JSAKICBtdXRhdGUoZ3JpZF9pZCA9IGN1cl9ncm91cF9pZCgpKSAlPiUgCiAgdW5ncm91cCgpICU+JSAKICAjIHJlbmFtZSB2YXJpYWJsZXMKICByZW5hbWUoZGF5X2lkID0gdmFyaWFibGUsIHRlbXAgPSB2YWx1ZSkgJT4lIAogICMgZW5zdXJlIGRhdGEgaXMgaW4gY2hyb25vbG9naWNhbCBvcmRlciBieSBncmlkCiAgYXJyYW5nZShncmlkX2lkLGRheV9pZCkKYGBgCgoKZmluZCB3aGVyZSBoZWF0d2F2ZSBjcml0ZXJpYSBpcyBtZXQKYGBge3J9CmRmX2FsbCA8LSBkZl9hbGwgJT4lIAogICMgaWRlbmlmeSB3aGV0aGVyIHRoZSBkYWlseSB0ZW1wZXJhdHVyZSBtZWV0cyBvciBleGNlZWRzIGhlYXR3YXZlIHRocmVzaG9sZAogIG11dGF0ZShhYm92ZV90aHJlc2hvbGQgPSBpZl9lbHNlKHRlbXAgPj0gaHdfdGhyZXNob2xkLCAxLCAwKSkgJT4lIAogICMgZ3JvdXAgYnkgZ3JpZCBzcXVhcmUgYW5kIGNyZWF0ZSBhIHN1bSBvZiB0aGUgYmluYXJ5IHZhcmlhYmxlIGZvciB0aGUgY3VycmVudCBkYXkgcGx1cyBwcmV2aW91cyAyIGRheXMKICBncm91cF9ieShncmlkX2lkLHBlcmlvZCkgJT4lIAogIG11dGF0ZShyb2xsID0gcm9sbGFwcGx5cihhYm92ZV90aHJlc2hvbGQsIDMsIHN1bSwgcGFydGlhbCA9IFQpKSAlPiUgCiAgdW5ncm91cCgpICU+JSAKICAjIHdoZXJlIHRoZSBzdW0gaXMgMyAoYWxsIHRocmVlIGRheXMgbWVldCBvciBleGNlZWQgaGVhdHdhdmUgdGhyZXNob2xkKSBhc3NpZ24gMSwgb3RoZXJ3aXNlIDAKICBtdXRhdGUoaGVhdHdhdmUgPSBpZl9lbHNlKHJvbGwgPT0gMywxLDApKQpgYGAKCmNvdW50IG51bWJlciBvZiBoZWF0d2F2ZSBkYXlzIGZvciBlYWNoIGdyaWQgc3F1YXJlIChhbmQgdGltZSBwZXJpb2Q/KQpgYGB7cn0KaGVhdHdhdmVfZGF5cyA8LSBkZl9hbGwgJT4lIAogICMgZ3JvdXAgYnkgZ3JpZCBzcXVhcmUgKGFuZCBwb3NzIHRpbWUgcGVyaW9kKQogIGdyb3VwX2J5KGdyaWRfaWQscGVyaW9kKSAlPiUgCiAgIyBzdW0gaGVhdHdhdmUgZGF5cwogIHN1bW1hcmlzZSh0b3RhbF9oZWF0d2F2ZV9kYXlzID0gc3VtKGhlYXR3YXZlKSkKCiMgZmluZCBhbGwgdW5pcXVlIGNvbWJpbmF0aW9ucyBvZiBjb29yZGluYXRlcyBhbmQgdGhlaXIgY29ycmVzcG9uZGluZyBncmlkIElECmdyaWRfbHUgPC0gdW5pcXVlKGRmX2FsbFtjKDEsMiw2KV0pCgojIGFkZCBjb29yZGluYXRlcyB0byB0aGUgaGVhdHdhdmVfZGF5cyB0YWJsZQpoZWF0d2F2ZV9kYXlzMiA8LSBsZWZ0X2pvaW4oaGVhdHdhdmVfZGF5cywgZ3JpZF9sdSlbYyg0LDUsMiwzKV0KCiMgbWFrZSBlYWNoIHRpbWUgcGVyaW9kIGEgZGlmZmVyZW50IGNvbHVtbgpod193aWRlIDwtIGNhc3QoaGVhdHdhdmVfZGF5czIsIHByb2plY3Rpb25feF9jb29yZGluYXRlICsgcHJvamVjdGlvbl95X2Nvb3JkaW5hdGUgfiBwZXJpb2QpCgojICEhISEhISEhIGFtZW5kIG5hbWUgZm9yIGVhY2ggZW5zZW1ibGUgcGxvdCAhISEhISEhISEhCmZ3cml0ZShod193aWRlLCAnaGVhdHdhdmVfZGF5c19lbnNlbWJsZTEuY3N2JykKYGBg</div>
 
 
 

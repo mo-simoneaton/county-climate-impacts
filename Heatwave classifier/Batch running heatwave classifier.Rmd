@@ -9,6 +9,7 @@ load dependencies
 library(data.table)
 library(tidyverse)
 library(zoo)
+library(reshape)
 ```
 
 read in data (and format accordingly)
@@ -83,6 +84,9 @@ grid_lu <- unique(df_all[c(1,2,6)])
 # add coordinates to the heatwave_days table
 heatwave_days2 <- left_join(heatwave_days, grid_lu)[c(4,5,2,3)]
 
+# make each time period a different column
+hw_wide <- cast(heatwave_days2, projection_x_coordinate + projection_y_coordinate ~ period)
+
 # !!!!!!!! amend name for each ensemble plot !!!!!!!!!!
-fwrite(heatwave_days2, 'heatwave_days_ensemble1.csv')
+fwrite(hw_wide, 'heatwave_days_ensemble1.csv')
 ```
