@@ -78,7 +78,7 @@ heatwave_days <- df_all %>%
   summarise(total_heatwave_days = sum(heatwave))
 
 # find all unique combinations of coordinates and their corresponding grid ID
-grid_lu <- unique(df_all[c(1,2,5)])
+grid_lu <- unique(df_all[c(1,2,6)])
 
 # add coordinates to the heatwave_days table
 heatwave_days2 <- left_join(heatwave_days, grid_lu)[c(4,5,2,3)]
