@@ -1,0 +1,60 @@
+---
+title: "Classifying cold snap events and calculating no. of days"
+output: html_notebook
+---
+
+load dependencies
+```{r}
+library(data.table)
+library(tidyverse)
+library(zoo)
+```
+
+read in data (and format accordingly)
+```{r}
+df <- fread('')
+```
+
+restructure data
+```{r}
+# convert cols to rows for each day
+df <- melt(df, id = c('projection_x_coordinate', 'projection_y_coordinate'))
+
+# make NAs 0
+df[is.na(df)] <- 0
+
+df <- df %>% 
+  # add a grid id for each pair of coordinates
+  group_by(projection_x_coordinate,projection_y_coordinate) %>% 
+  mutate(grid_id = cur_group_id()) %>% 
+  ungroup() %>% 
+  # add universal threshold to test
+  mutate(hw_threshold = 24) %>% 
+  rename(day_id = variable, temp = value) %>% 
+  # ensure data is in chronological order by grid
+  arrange(grid_id,day_id)
+```
+
+find where 'cold snap' criteria is met
+```{r}
+df <- df %>% 
+  # idenify whether the daily temperature falls below coldsnap threshold
+  mutate(below_threshold = if_else(temp < cs_threshold, 1, 0)) %>% 
+  # group by grid square and create a sum of the binary variable for the current day plus previous day
+  group_by(grid) %>% 
+  mutate(roll = rollapplyr(below_threshold, 2, sum, partial = T)) %>% 
+  ungroup() %>% 
+  # where the sum is 2 (2 days fall below coldsnap threshold) assign 1, otherwise 0
+  mutate(coldsnap = if_else(roll == 2,1,0)) %>% 
+  # remove intermediary columns
+  select(-c(roll,below_threshold))
+```
+
+count number of 'cold snap' days for each grid square (and time period?)
+```{r}
+coldsnap_days <- df %>% 
+  # group by grid square (and poss time period)
+  group_by(grid) %>% 
+  # sum coldsnap days
+  summarise(total = sum(coldsnap))
+```
