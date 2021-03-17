@@ -13,8 +13,6 @@ library(zoo)
 read in data (and format accordingly)
 ```{r}
 df <- fread('')
-lookup <- fread('test.csv')
-
 ```
 
 restructure data
