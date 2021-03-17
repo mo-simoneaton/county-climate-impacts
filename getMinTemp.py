@@ -27,6 +27,15 @@ minTemp = np.amin(febTemp.data)
 maxTemp = np.amax(febTemp.data)
 print("Range is", minTemp, "to", maxTemp)
 
-# Write out the result as nc file.
-outFile = 'tasmin_rcp85_land-rcm_uk_12km_01_mon_1980-2080_Feb.nc'
-iris.fileformats.netcdf.save(febTemp, dir + outFile)
+# Extract the data for a group of sub-periods, and output it in separate files.
+years = [[1995, 2000],
+         [2025, 2030],
+         [2055, 2060]]
+
+for limits in years:
+    # Extract all data in this period.
+    yearFebTemp = febTemp.extract(iris.Constraint(year=lambda cell: limits[0] <= cell <= limits[1]))
+    
+    # Write out the result as nc file.
+    outFile = 'tasmin_rcp85_land-rcm_uk_12km_01_mon_%d-%d_Feb.nc' % (limits[0], limits[1])
+    iris.fileformats.netcdf.save(yearFebTemp, dir + outFile)
