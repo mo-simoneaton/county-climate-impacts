@@ -17,3 +17,7 @@ This strand was (originally) interested in forging a link between climate change
 * [2055-2060](https://github.com/mo-simoneaton/county-climate-impacts/blob/master/data/tasmin_rcp85_land-rcm_uk_12km_01_mon_2055-2060_Feb.nc)
 
 The routine used to do the extraction was [getMinTemp.py](https://github.com/mo-simoneaton/county-climate-impacts/blob/master/getMinTemp.py), which uses the [Iris package](https://scitools-iris.readthedocs.io/en/stable/) to read and manipulate the climate data.
+
+### Choice of ensemble member(s)
+
+Initial focus was on a single member of the UKCP18 ensemble; a more rigorous treatment would use the ensemble average.
