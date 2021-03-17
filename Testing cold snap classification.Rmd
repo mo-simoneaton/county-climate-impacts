@@ -13,6 +13,8 @@ library(zoo)
 read in data (and format accordingly)
 ```{r}
 df <- fread('')
+lookup <- fread('test.csv')
+
 ```
 
 restructure data
@@ -28,8 +30,8 @@ df <- df %>%
   group_by(projection_x_coordinate,projection_y_coordinate) %>% 
   mutate(grid_id = cur_group_id()) %>% 
   ungroup() %>% 
-  # add universal threshold to test
-  mutate(hw_threshold = 24) %>% 
+  # add universal threshold 
+  mutate(cs_threshold = 2) %>% 
   rename(day_id = variable, temp = value) %>% 
   # ensure data is in chronological order by grid
   arrange(grid_id,day_id)
@@ -46,8 +48,7 @@ df <- df %>%
   ungroup() %>% 
   # where the sum is 2 (2 days fall below coldsnap threshold) assign 1, otherwise 0
   mutate(coldsnap = if_else(roll == 2,1,0)) %>% 
-  # remove intermediary columns
-  select(-c(roll,below_threshold))
+
 ```
 
 count number of 'cold snap' days for each grid square (and time period?)
